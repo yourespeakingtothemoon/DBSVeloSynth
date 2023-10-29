@@ -80,6 +80,25 @@ void ADBSVS_VehicleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 }
 
+void ADBSVS_VehicleBase::AddThrust(float AxisValue)
+{
+	
+	ThrustAxis = FMath::FInterpTo(ThrustAxis, AxisValue, GetWorld()->GetDeltaSeconds(), ThrustTriggerInterpolationSpeed);
+//ThrustAxis = AxisValue;
+}
+
+void ADBSVS_VehicleBase::Steer(float AxisValue)
+{
+SteerAxis = FMath::FInterpTo(SteerAxis, AxisValue, GetWorld()->GetDeltaSeconds(), SteerTriggerInterpolationSpeed);
+}
+
+void ADBSVS_VehicleBase::Brake(bool value)
+{
+	isBraking = value;
+}
+
+
+
 void ADBSVS_VehicleBase::UpdateSuspension(int NodeIdx, float DeltaTime)
 {
 	if(!Nodes.IsValidIndex(NodeIdx))
@@ -94,13 +113,20 @@ FVector End = node->GetForwardVector()*(MaxSpringLength+FieldRadius)+Start;
 
 GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Camera,TraceCollisionParams,FCollisionResponseParams());
 float prevLength = SpringLength[NodeIdx];
+
+FVector wLinVelocity = Mesh_Body->GetPhysicsLinearVelocity();
+FVector lLinVelocity = UKismetMathLibrary::InverseTransformDirection(Mesh_Body->GetComponentTransform(), wLinVelocity);
+
+
 if (HitResult.IsValidBlockingHit())
 {
 	float curLength = HitResult.Distance - FieldRadius;
 	SpringLength[NodeIdx] = FMath::Clamp(curLength, MinSpringLength, MaxSpringLength);
 	float springOffset = RestLength - SpringLength[NodeIdx];
+	float springVelocity = (springOffset - prevLength) / DeltaTime;
+	float damperForce = DamperConstant * springVelocity;
 float springForce = SpringConstant * springOffset;
-FVector springForceVector = GetActorUpVector() * springForce;
+FVector springForceVector = GetActorUpVector() * (springForce+damperForce);
 Mesh_Body->AddForceAtLocation(springForceVector, node->GetComponentLocation());
 
 
@@ -110,6 +136,25 @@ else
 	SpringLength[NodeIdx] = MaxSpringLength;
 }
 
+float CurrentSteerAngle = UKismetMathLibrary::MapRangeClamped(SteerAxis, -1.0f, 1.0f, -MaxSteeringAngle, MaxSteeringAngle);
+if (wLinVelocity.SizeSquared() > 1)
+{
+	Mesh_Body->AddTorqueInDegrees(FVector(0.0f, 0.0f, CurrentSteerAngle));
+}
+FVector FrictionVec = FVector::ZeroVector;
+if (UKismetMathLibrary::Abs(lLinVelocity.Y) > 2)
+{
+	FrictionVec= Mesh_Body->GetRightVector() * lLinVelocity.Y * -1.0f * FrictionConstant;
+}
+
+FVector ThrustForceVector = GetActorForwardVector() * ThrustConstant*ThrustAxis + FrictionVec;
+
+if (isBraking)
+{
+	ThrustForceVector = wLinVelocity * -1.0f * BrakeConstant;
+
+}
+Mesh_Body->AddForce(ThrustForceVector);
 
 }
 

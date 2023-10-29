@@ -7,6 +7,8 @@
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+//include UKismetMathLibrary for FInterpTo
+#include "Kismet/KismetMathLibrary.h"
 #include "DBSVS_VehicleBase.generated.h"
 
 UCLASS()
@@ -15,6 +17,8 @@ class DBSVELOSYNTH_API ADBSVS_VehicleBase : public APawn
 	GENERATED_BODY()
 
 public:
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* Mesh_Body;
@@ -41,7 +45,25 @@ float SpringTravelLength = 10;
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
 float FieldRadius = 34;
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-float SpringConstant = 500;
+float SpringConstant = 50000;
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float DamperConstant = 5000;
+
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float ThrustConstant = 500;
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float BrakeConstant = 500;
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float ThrustTriggerInterpolationSpeed = 4;
+
+
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float MaxSteeringAngle = 45;
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float SteerTriggerInterpolationSpeed = 4;
+UPROPERTY(EditAnywhere, BlueprintReadOnly)
+float FrictionConstant = 4;
+
 
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
 FName TraceTag = "SuspensionTrace";
@@ -56,7 +78,11 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
+	float ThrustAxis = 0;
+	float SteerAxis = 0;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool isBraking = false;
 
 public:	
 	// Called every frame
@@ -64,6 +90,11 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void AddThrust(float AxisValue);
+	void Steer(float AxisValue);
+	void Brake(bool value);
+
 
 private:
 	TArray<UArrowComponent*> Nodes;
@@ -74,5 +105,7 @@ FCollisionQueryParams TraceCollisionParams;
 
 
 void UpdateSuspension(int NodeIdx, float DeltaTime);
+
+
 
 };
