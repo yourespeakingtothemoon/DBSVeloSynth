@@ -139,7 +139,8 @@ else
 float CurrentSteerAngle = UKismetMathLibrary::MapRangeClamped(SteerAxis, -1.0f, 1.0f, -MaxSteeringAngle, MaxSteeringAngle);
 if (wLinVelocity.SizeSquared() > 1)
 {
-	Mesh_Body->AddTorqueInDegrees(FVector(0.0f, 0.0f, CurrentSteerAngle));
+	Mesh_Body->AddTorqueInDegrees(FVector(0.0f, 0.0f, CurrentSteerAngle), NAME_None,true);
+	//tilt destroys lives Mesh_Body->AddTorqueInDegrees(FVector(0, SteerAxis * 15, 0), NAME_None, true);
 }
 FVector FrictionVec = FVector::ZeroVector;
 if (UKismetMathLibrary::Abs(lLinVelocity.Y) > 2)
