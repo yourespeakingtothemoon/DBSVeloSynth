@@ -11,10 +11,14 @@ ADBSVS_VehicleBase::ADBSVS_VehicleBase()
 
 	Mesh_Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Body"));
 	RootComponent = Mesh_Body;
-	if(UStaticMesh* CraftMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("'StaticMesh' /Game/Assets/SM_Craft"))))
+	if(UStaticMesh* CraftMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("'StaticMesh' /Game/Assets/Meshes/SM_Craft"))))
 {
 		Mesh_Body->SetStaticMesh(CraftMesh);
 	}
+
+	//set mesh default settings
+	Mesh_Body->SetSimulatePhysics(true);
+	Mesh_Body->SetMassOverrideInKg(NAME_None, 250.0f, true);
 
 	Node_FrontRight= CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow_FrontRight"));
 	Node_FrontRight->SetupAttachment(Mesh_Body, FName("Node_FR"));

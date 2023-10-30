@@ -43,28 +43,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Suspension")
 	float RestLength = 50.0f;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Suspension")
-float SpringTravelLength = 10;
+float SpringTravelLength = 35;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Suspension")
-float FieldRadius = 34;
+float FieldRadius = 30;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Suspension")
-float SpringConstant = 50000;
+float SpringConstant = 15000;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Suspension")
-float DamperConstant = 5000;
+float DamperConstant = 100;
 //Category: Thrust
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Thrust")
-float ThrustConstant = 500;
+float ThrustConstant = 300000;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Thrust")
-float BrakeConstant = 500;
+float BrakeConstant = 50;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Thrust")
 float ThrustTriggerInterpolationSpeed = 4;
 //Category: Steering
 
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Steering")
-float MaxSteeringAngle = 45;
+float MaxSteeringAngle = 15;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Steering")
 float SteerTriggerInterpolationSpeed = 4;
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hover Physics | Steering")
-float FrictionConstant = 4;
+float FrictionConstant = 400;
 
 
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
