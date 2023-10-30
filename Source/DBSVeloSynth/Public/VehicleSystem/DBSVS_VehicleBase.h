@@ -91,8 +91,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
 	void AddThrust(float AxisValue);
+	UFUNCTION(BlueprintCallable)
 	void Steer(float AxisValue);
+	UFUNCTION(BlueprintCallable)
 	void Brake(bool value);
 
 

@@ -11,23 +11,23 @@ ADBSVS_VehicleBase::ADBSVS_VehicleBase()
 
 	Mesh_Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh_Body"));
 	RootComponent = Mesh_Body;
-	if(UStaticMesh* CraftMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("'StaticMesh' /Game/Assets/Meshes/SM_Craft"))))
+	if(UStaticMesh* CraftMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, TEXT("'StaticMesh' /Game/Assets/SM_Craft"))))
 {
 		Mesh_Body->SetStaticMesh(CraftMesh);
 	}
 
 	Node_FrontRight= CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow_FrontRight"));
-	Node_FrontRight->SetupAttachment(Mesh_Body, FName("FR"));
-	Node_FrontRight->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+	Node_FrontRight->SetupAttachment(Mesh_Body, FName("Node_FR"));
+	Node_FrontRight->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	Node_FrontLeft = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow_FrontLeft"));
-	Node_FrontLeft->SetupAttachment(Mesh_Body, FName("FL"));
-	Node_FrontLeft->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+	Node_FrontLeft->SetupAttachment(Mesh_Body, FName("Node_FL"));
+	Node_FrontLeft->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	Node_BackRight = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow_BackRight"));
-	Node_BackRight->SetupAttachment(Mesh_Body, FName("BR"));
-	Node_BackRight->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+	Node_BackRight->SetupAttachment(Mesh_Body, FName("Node_BR"));
+	Node_BackRight->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	Node_BackLeft = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow_BackLeft"));
-	Node_BackLeft->SetupAttachment(Mesh_Body, FName("BL"));
-	Node_BackLeft->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+	Node_BackLeft->SetupAttachment(Mesh_Body, FName("Node_BL"));
+	Node_BackLeft->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(Mesh_Body);
@@ -126,7 +126,7 @@ if (HitResult.IsValidBlockingHit())
 	float springVelocity = (springOffset - prevLength) / DeltaTime;
 	float damperForce = DamperConstant * springVelocity;
 float springForce = SpringConstant * springOffset;
-FVector springForceVector = GetActorUpVector() * (springForce+damperForce);
+FVector springForceVector = GetActorUpVector() * (springForce-damperForce);
 Mesh_Body->AddForceAtLocation(springForceVector, node->GetComponentLocation());
 
 
